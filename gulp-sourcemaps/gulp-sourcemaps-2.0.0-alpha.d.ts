@@ -4,12 +4,8 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 /// <reference path="../node/node.d.ts"/>
-/// <reference path="../vinyl/vinyl.d.ts"/>
-/// <reference path="../gulp/gulp.d.ts"/>
 
 declare module "gulp-sourcemaps" {
-    import File = require("vinyl");
-    import gulp = require("gulp");
 
     interface InitOptions {
         loadMaps?: boolean;
@@ -22,14 +18,15 @@ declare module "gulp-sourcemaps" {
     }
 
     interface WriteFileMapper {
-        (file: File): string;
+        // file parameter needs to be updated with the vinyl file object definition
+        (file: any): string;
     }
 
     interface WriteOptions {
         addComment?: boolean;
         includeContent?: boolean;
         sourceRoot?: string | WriteMapper;
-        destPath?: gulp.DestMethod;
+        destPath?: string;
         sourceMappingURLPrefix?: string | WriteMapper;
         sourceMappingURL?: WriteFileMapper;
         mapFile?: WriteMapper;
