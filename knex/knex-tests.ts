@@ -380,7 +380,7 @@ knex.transaction(function(trx) {
 
 // Using trx as a transaction object:
 knex.transaction(function(trx) {
-  
+
   trx.raw('')
 
   var info: any;
@@ -569,10 +569,10 @@ knex.select('name').from('users')
   .andWhere('id', '<', 200)
   .limit(10)
   .offset(x)
-  .exec(function(err: any, rows: any[]) {
+  .asCallback(function(err: any, rows: any[]) {
     if (err) return console.error(err);
     knex.select('id').from('nicknames').whereIn('nickname', _.pluck(rows, 'name'))
-      .exec(function(err: any, rows: any[]) {
+      .asCallback(function(err: any, rows: any[]) {
         if (err) return console.error(err);
         console.log(rows);
       });
@@ -580,7 +580,7 @@ knex.select('name').from('users')
 
 // Retrieve the stream:
 var stream = knex.select('*').from('users').stream();
-var writableStream: any;
+var writableStream: NodeJS.ReadWriteStream;
 stream.pipe(writableStream);
 
 // With options:
@@ -600,7 +600,7 @@ var stream = knex.select('*').from('users').where(knex.raw('id = ?', [1])).strea
 
 })();
 
-var stream = knex.select('*').from('users').pipe(writableStream);
+var pipeStream = knex.select('*').from('users').pipe(writableStream);
 var app: any;
 
 knex.select('*')

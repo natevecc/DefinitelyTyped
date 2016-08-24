@@ -319,12 +319,15 @@ declare module "knex" {
     // Execution interface - does nothing return query build so these are the end of the line
     //
 
+    interface PromiseReadWriteStream extends Promise<any>, NodeJS.ReadWriteStream {}
+
     interface ExecutionInterface extends Promise<any> {
       toQuery(): string;
-      stream(options?: any, callback?: (stream: NodeJS.ReadWriteStream) => any): NodeJS.ReadWriteStream;
-      stream(callback?: (stream: NodeJS.ReadWriteStream) => any): NodeJS.ReadWriteStream;
-      pipe(writable: any): NodeJS.ReadWriteStream;
-      asCallBack(callback: Function): void;
+      stream(options?: any, callback?: (stream: NodeJS.ReadWriteStream) => any): PromiseReadWriteStream;
+      stream(callback?: (stream: NodeJS.ReadWriteStream) => any): PromiseReadWriteStream;
+      pipe(writable: NodeJS.WritableStream): NodeJS.ReadWriteStream;
+      exec(callback: (err: any, value?: any, options?: Promise.SpreadOption) => void): this;
+      asCallback(callback: (err: any, value?: any, options?: Promise.SpreadOption) => void): this;
     }
 
     interface Transaction extends QueryBuilder {
