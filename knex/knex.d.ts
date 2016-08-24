@@ -277,7 +277,7 @@ declare module "knex" {
 
     // Raw
 
-    interface Raw extends events.EventEmitter, ChainableInterface {
+    interface Raw extends events.EventEmitter, ExecutionInterface {
       wrap(before: string, after: string): Raw;
     }
 
@@ -292,7 +292,7 @@ declare module "knex" {
     // QueryBuilder
     //
 
-    interface QueryBuilder extends QueryInterface, ChainableInterface {
+    interface QueryBuilder extends QueryInterface, ExecutionInterface {
       or: QueryBuilder;
       and: QueryBuilder;
 
@@ -305,6 +305,7 @@ declare module "knex" {
       toSQL(): Sql;
 
       on(event: string, callback: Function): QueryBuilder;
+      options(options: any): QueryBuilder;
     }
 
     interface Sql {
@@ -315,16 +316,15 @@ declare module "knex" {
     }
 
     //
-    // Chainable interface
+    // Execution interface - does nothing return query build so these are the end of the line
     //
 
-    interface ChainableInterface extends Promise<any> {
+    interface ExecutionInterface extends Promise<any> {
       toQuery(): string;
-      options(options: any): QueryBuilder;
-      stream(options?: any, callback?: (builder: QueryBuilder) => any): QueryBuilder;
-      stream(callback?: (builder: QueryBuilder) => any): QueryBuilder;
-      pipe(writable: any): QueryBuilder;
-      exec(callback: Function): QueryBuilder;
+      stream(options?: any, callback?: (stream: NodeJS.ReadWriteStream) => any): NodeJS.ReadWriteStream;
+      stream(callback?: (stream: NodeJS.ReadWriteStream) => any): NodeJS.ReadWriteStream;
+      pipe(writable: any): NodeJS.ReadWriteStream;
+      asCallBack(callback: Function): void;
     }
 
     interface Transaction extends QueryBuilder {
